@@ -8,7 +8,7 @@ El presente proyecto tiene como finalidad aplicar los conceptos fundamentales de
 
 ## Demo del proyecto
 El proyecto se encuentra disponible en GitHub Pages:
-https://tuusuario.github.io/compuertas-logicas-bcd/
+https://tablebuild.github.io/compuertas-logicas-bcd/
 
 ---
 
