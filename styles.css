@@ -136,11 +136,12 @@ svg {
 /* ==================== PANEL SVG + ECUACIONES ==================== */
 .paneles {
   display: flex;
-  gap: 20px;                 /* Espacio entre cajas */
+  gap: 12px;                 /* Espacio entre cajas */
   justify-content: center;   /* Centrado horizontal */
   align-items: flex-start;   /* Alinear arriba */
   flex-wrap: wrap;           /* Responsive */
   margin: 20px auto;
+  max-width: 1200px;         /* Aprovecha pantallas grandes */
 }
 
 /* Ajustes de tamaño */
@@ -151,5 +152,5 @@ svg {
 
 .ecuaciones {
   flex: 1 1 350px;
-  max-width: 500px;
+  max-width: 600px;
 }
