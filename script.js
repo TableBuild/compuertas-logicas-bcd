@@ -1,10 +1,25 @@
-/* ==================== COMPUERTAS ==================== */
+/* ==================== COMPUERTAS LÓGICAS ==================== */
 const NOT = x => !x;
 const AND = (...x) => x.every(Boolean);
 const OR  = (...x) => x.some(Boolean);
 
-/* ==================== ECUACIONES ==================== */
-function evaluar(A, B, C, D) {
+/* ==================== TABLA DE VERDAD ==================== */
+/* A = MSB (8) | B = 4 | C = 2 | D = LSB (1) */
+const tablaVerdad = [
+  { A:0,B:0,C:0,D:0, a:1,b:1,c:1,d:1,e:1,f:1,g:0 },
+  { A:0,B:0,C:0,D:1, a:0,b:1,c:1,d:0,e:0,f:0,g:0 },
+  { A:0,B:0,C:1,D:0, a:1,b:1,c:0,d:1,e:1,f:0,g:1 },
+  { A:0,B:0,C:1,D:1, a:1,b:1,c:1,d:1,e:0,f:0,g:1 },
+  { A:0,B:1,C:0,D:0, a:0,b:1,c:1,d:0,e:0,f:1,g:1 },
+  { A:0,B:1,C:0,D:1, a:1,b:0,c:1,d:1,e:0,f:1,g:1 },
+  { A:0,B:1,C:1,D:0, a:1,b:0,c:1,d:1,e:1,f:1,g:1 },
+  { A:0,B:1,C:1,D:1, a:1,b:1,c:1,d:0,e:0,f:0,g:0 },
+  { A:1,B:0,C:0,D:0, a:1,b:1,c:1,d:1,e:1,f:1,g:1 },
+  { A:1,B:0,C:0,D:1, a:1,b:1,c:1,d:1,e:0,f:1,g:1 }
+];
+
+/* ==================== ECUACIONES BOOLEANAS ==================== */
+function evaluar(A,B,C,D) {
   return {
     a: OR(A, C, AND(B,D), AND(NOT(B),NOT(D))),
     b: OR(NOT(B), AND(NOT(C),NOT(D)), AND(C,D)),
@@ -16,60 +31,25 @@ function evaluar(A, B, C, D) {
   };
 }
 
-/* ==================== ANIMACIÓN ==================== */
-function animarSegmentoA(A, B, C, D) {
+/* ==================== CREAR TABLA ==================== */
+function crearTablaVerdad() {
+  const tbody = document.querySelector("#truthTable tbody");
+  if (!tbody) return;
 
-  const get = id => document.getElementById(id);
+  tbody.innerHTML = "";
 
-  const ids = [
-    "wire-A","wire-B","wire-C","wire-D",
-    "notB","notD","andBD","andNotBD","orA",
-    "wire-BD","wire-notBD","wire-A2","wire-C2","wire-out-a"
-  ];
+  tablaVerdad.forEach((fila, index) => {
+    const tr = document.createElement("tr");
+    tr.dataset.index = index;
 
-  // Reset
-  ids.forEach(id => {
-    const el = get(id);
-    if (el) el.classList.remove("active-wire","active-gate","flow");
+    ["A","B","C","D","a","b","c","d","e","f","g"].forEach(key => {
+      const td = document.createElement("td");
+      td.textContent = fila[key];
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
   });
-
-  // ===== ENTRADAS =====
-  if (A) get("wire-A").classList.add("active-wire","flow");
-  if (B) get("wire-B").classList.add("active-wire","flow");
-  if (C) get("wire-C").classList.add("active-wire","flow");
-  if (D) get("wire-D").classList.add("active-wire","flow");
-
-  // ===== NOT =====
-  const notB = !B;
-  const notD = !D;
-
-  if (notB) get("notB").classList.add("active-gate");
-  if (notD) get("notD").classList.add("active-gate");
-
-  // ===== AND =====
-  const BD = B && D;
-  const nBnD = notB && notD;
-
-  if (BD) {
-    get("andBD").classList.add("active-gate");
-    get("wire-BD").classList.add("active-wire","flow");
-  }
-
-  if (nBnD) {
-    get("andNotBD").classList.add("active-gate");
-    get("wire-notBD").classList.add("active-wire","flow");
-  }
-
-  // ===== OR FINAL =====
-  const salida = A || C || BD || nBnD;
-
-  if (salida) {
-    get("orA").classList.add("active-gate");
-    get("wire-out-a").classList.add("active-wire","flow");
-  }
-
-  if (A) get("wire-A2").classList.add("active-wire","flow");
-  if (C) get("wire-C2").classList.add("active-wire","flow");
 }
 
 /* ==================== ACTUALIZAR ==================== */
@@ -84,11 +64,24 @@ function actualizar() {
 
   const s = evaluar(A,B,C,D);
 
+  // Display
   Object.keys(s).forEach(seg => {
     document.getElementById(seg).classList.toggle("on", s[seg]);
   });
 
-  // Mostrar ecuaciones
+  // Tabla
+  document.querySelectorAll("#truthTable tbody tr")
+    .forEach(tr => tr.classList.remove("activa"));
+
+  if (numero <= 9) {
+    const fila = document.querySelector(
+      `#truthTable tbody tr[data-index="${numero}"]`
+    );
+    if (fila) fila.classList.add("activa");
+  }
+  
+/* ==================== ECUACIONES ==================== */
+
   document.getElementById("eq-a").textContent =
     `a = A + C + (B·D) + (¬B·¬D) = ${s.a}`;
   document.getElementById("eq-b").textContent =
@@ -103,18 +96,15 @@ function actualizar() {
     `f = A + (¬C·¬D) + (B·¬C) + (B·¬D) = ${s.f}`;
   document.getElementById("eq-g").textContent =
     `g = A + (¬B·C) + (B·¬C) + (C·¬D) = ${s.g}`;
-
-  // 🔥 Animación integrada correctamente
-  animarSegmentoA(A, B, C, D);
 }
 
-/* ==================== INICIALIZACIÓN ==================== */
+/* ==================== INICIO ==================== */
 document.addEventListener("DOMContentLoaded", () => {
+  crearTablaVerdad();
 
   ["A","B","C","D"].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener("change", actualizar);
+    document.getElementById(id).addEventListener("change", actualizar);
   });
 
-  actualizar(); // estado inicial
+  actualizar();
 });
