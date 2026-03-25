@@ -1,4 +1,75 @@
-/* ==================== VARIABLES ==================== */
+
+/* ==================== POSICIONES DE LOS SEGMENTOS ==================== */
+.a { top: 0; left: 20px; width: 80px; height: 15px; }
+.b { top: 15px; right: 0; width: 15px; height: 80px; }
+.c { bottom: 15px; right: 0; width: 15px; height: 80px; }
+.d { bottom: 0; left: 20px; width: 80px; height: 15px; }
+.e { bottom: 15px; left: 0; width: 15px; height: 80px; }
+.f { top: 15px; left: 0; width: 15px; height: 80px; }
+.g { top: 92px; left: 20px; width: 80px; height: 15px; }
+
+
+/* ==================== PANELES ==================== */
+.paneles {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin: 20px auto;
+  max-width: 1200px;
+}
+
+/* ==================== TABLA DE LA VERDAD ==================== */
+.truth-box {
+  background: var(--panel);
+  padding: 15px;
+  border-radius: 8px;
+  flex: 1 1 500px;
+  max-width: 700px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: monospace;
+  font-size: 14px;
+  text-align: center;
+}
+
+th, td {
+  border: 1px solid #444;
+  padding: 6px;
+}
+
+th {
+  background: #222;
+}
+
+tr.activa {
+  background: #003300;
+  color: var(--accent);
+  font-weight: bold;
+}
+
+/* ==================== ECUACIONES ==================== */
+.ecuaciones {
+  background: var(--panel);
+  padding: 15px;
+  border-radius: 8px;
+  flex: 1 1 350px;
+  max-width: 650px;
+  text-align: left;
+}
+
+pre {
+  background: #000;
+  padding: 10px;
+  border-radius: 5px;
+  color: var(--accent);
+  overflow-x: auto;
+}
+
 :root {
   --bg: #0b0b0b;
   --panel: #111;
@@ -17,7 +88,6 @@ body {
   margin: 0;
 }
 
-/* Contenedor general */
 body > * {
   margin-bottom: 20px;
 }
@@ -30,15 +100,17 @@ h1, h2 {
 .switches {
   margin: 15px;
   font-size: 18px;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
 }
 
 .switches label {
-  margin: 0 10px;
   cursor: pointer;
 }
 
 .switches input {
-  margin-right: 15px;
+  margin-left: 5px;
   transform: scale(1.2);
   cursor: pointer;
 }
@@ -51,7 +123,6 @@ h1, h2 {
   margin: 20px auto;
 }
 
-/* Segmento base */
 .segment {
   position: absolute;
   background: var(--segment-off);
@@ -59,98 +130,13 @@ h1, h2 {
   transition: all 0.2s ease;
 }
 
-/* Segmento encendido */
 .segment.on {
   background: var(--segment-on);
-  box-shadow: 0 0 5px var(--segment-on),
-              0 0 15px var(--segment-on),
-              0 0 30px var(--segment-on);
+  box-shadow:
+    0 0 5px var(--segment-on),
+    0 0 15px var(--segment-on),
+    0 0 30px var(--segment-on);
 }
 
-/* Posiciones */
-.a { top: 0; left: 20px; width: 80px; height: 15px; }
-.b { top: 15px; right: 0; width: 15px; height: 80px; }
-.c { bottom: 15px; right: 0; width: 15px; height: 80px; }
-.d { bottom: 0; left: 20px; width: 80px; height: 15px; }
-.e { bottom: 15px; left: 0; width: 15px; height: 80px; }
-.f { top: 15px; left: 0; width: 15px; height: 80px; }
-.g { top: 92px; left: 20px; width: 80px; height: 15px; }
+/* POSICIONES */
 
-/* ==================== ECUACIONES ==================== */
-.ecuaciones {
-  max-width: 700px;
-  margin: auto;
-  text-align: left;
-  background: var(--panel);
-  padding: 15px;
-  border-radius: 8px;
-}
-
-pre {
-  background: #000;
-  padding: 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  overflow-x: auto;
-}
-
-/* ==================== SVG ==================== */
-.svg-box {
-  margin: 20px auto;
-  max-width: 600px;
-  background: var(--panel);
-  padding: 15px;
-  border-radius: 8px;
-}
-
-svg {
-  width: 100%;
-  height: auto;
-}
-
-/* ==================== ANIMACIÓN ==================== */
-
-/* Cables activos */
-.active-wire {
-  stroke: var(--accent) !important;
-  stroke-width: 4;
-}
-
-/* Compuertas activas */
-.active-gate {
-  fill: #003322 !important;
-  stroke: var(--accent) !important;
-}
-
-/* Flujo más suave */
-@keyframes flow {
-  from { stroke-dashoffset: 20; }
-  to { stroke-dashoffset: 0; }
-}
-
-.flow {
-  stroke-dasharray: 6;
-  animation: flow 1s linear infinite;
-}
-
-/* ==================== PANEL SVG + ECUACIONES ==================== */
-.paneles {
-  display: flex;
-  gap: 12px;                 /* Espacio entre cajas */
-  justify-content: center;   /* Centrado horizontal */
-  align-items: flex-start;   /* Alinear arriba */
-  flex-wrap: wrap;           /* Responsive */
-  margin: 20px auto;
-  max-width: 1200px;         /* Aprovecha pantallas grandes */
-}
-
-/* Ajustes de tamaño */
-.svg-box {
-  flex: 1 1 500px;           /* Crece, encoge, base */
-  max-width: 600px;
-}
-
-.ecuaciones {
-  flex: 1 1 350px;
-  max-width: 600px;
-}
